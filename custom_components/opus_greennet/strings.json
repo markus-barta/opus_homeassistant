@@ -1,0 +1,35 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Opus GreenNet Bridge",
+        "description": "Configure your Opus GreenNet Bridge connection. The bridge must be connected to your MQTT broker.",
+        "data": {
+          "eag_id": "EAG Identifier (Bridge ID)"
+        },
+        "data_description": {
+          "eag_id": "The unique identifier of your Opus GreenNet Bridge (e.g., 050B4DFA). This is used in the MQTT topic structure."
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to MQTT broker",
+      "invalid_eag_id": "Invalid EAG Identifier format",
+      "already_configured": "This bridge is already configured"
+    },
+    "abort": {
+      "already_configured": "This bridge is already configured",
+      "mqtt_not_configured": "MQTT integration is not configured. Please set up MQTT first."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opus GreenNet Options",
+        "data": {
+          "scan_interval": "Device scan interval (seconds)"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "domain": "opus_greennet",
+  "name": "Opus GreenNet Bridge",
+  "codeowners": [],
+  "config_flow": true,
+  "dependencies": ["mqtt"],
+  "documentation": "https://github.com/your-repo/opus_greennet",
+  "iot_class": "local_push",
+  "issue_tracker": "https://github.com/your-repo/opus_greennet/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}
