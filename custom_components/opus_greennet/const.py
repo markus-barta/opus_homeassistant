@@ -21,6 +21,8 @@ TOPIC_GET_ANSWER_DEVICES: Final = "{base}/{eag_id}/getAnswer/devices/#"
 TOPIC_SUB_TELEGRAM_FROM: Final = "{base}/{eag_id}/stream/telegram/+/from"
 TOPIC_SUB_TELEGRAM_TO: Final = "{base}/{eag_id}/stream/telegram/+/to"
 TOPIC_SUB_DEVICE: Final = "{base}/{eag_id}/stream/device/+"
+TOPIC_SUB_DEVICES: Final = "{base}/{eag_id}/stream/devices/+"
+TOPIC_SUB_DEVICES_ALL: Final = "{base}/{eag_id}/stream/devices/#"
 TOPIC_SUB_GET_ANSWER: Final = "{base}/{eag_id}/getAnswer/devices/+"
 
 # EEP (EnOcean Equipment Profile) to entity type mappings
