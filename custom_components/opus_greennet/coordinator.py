@@ -1,6 +1,7 @@
 """Data coordinator for Opus GreenNet Bridge integration."""
 from __future__ import annotations
 
+import json
 import logging
 import re
 from collections.abc import Callable
@@ -366,31 +367,22 @@ class OpusGreenNetCoordinator:
         device_id: str,
         functions: list[dict[str, Any]],
     ) -> None:
-        """Send a command to a device using flattened MQTT structure."""
-        base_topic = TOPIC_PUT_STATE.format(
+        """Send a command to a device using JSON state message."""
+        topic = TOPIC_PUT_STATE.format(
             base=TOPIC_BASE, eag_id=self.eag_id, device_id=device_id
         )
 
-        _LOGGER.debug(
-            "Sending command to device %s with functions: %s",
-            device_id,
-            functions,
-        )
+        # Build state object (not telegram!) as expected by the bridge
+        state_message = {
+            "state": {
+                "functions": functions,
+            }
+        }
 
-        # Publish each function property as a separate MQTT message
-        for idx, func in enumerate(functions):
-            key = func.get("key")
-            value = func.get("value")
+        payload = json.dumps(state_message)
+        _LOGGER.debug("Sending command to %s: %s", topic, payload)
 
-            if key:
-                topic_key = f"{base_topic}/functions/{idx}/key"
-                await mqtt.async_publish(self.hass, topic_key, key, qos=1)
-                _LOGGER.debug("Published %s = %s", topic_key, key)
-
-            if value is not None:
-                topic_value = f"{base_topic}/functions/{idx}/value"
-                await mqtt.async_publish(self.hass, topic_value, str(value), qos=1)
-                _LOGGER.debug("Published %s = %s", topic_value, value)
+        await mqtt.async_publish(self.hass, topic, payload, qos=1)
 
     async def async_turn_on(
         self,
