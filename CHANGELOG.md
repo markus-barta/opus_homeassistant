@@ -2,11 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.0.10] - 2024-11-24
+## [0.0.10] - 2024-11-29
 
 ### Fixed
-- **Device availability restored**: Fixed device lookup in telegram handler. Devices are keyed by friendly_id but telegrams only contain device_id, causing a lookup mismatch that made all devices unavailable.
-- **Thread safety fix**: Fixed `async_dispatcher_send` being called from wrong thread in `_finalize_telegram`. The `async_call_later` callback now uses proper `@callback` decorator.
+- **State updates now working**: Fixed multiple issues preventing device state updates from reflecting in Home Assistant:
+  - Fixed telegram topic regex to match actual bridge structure (removed incorrect `from/to` segment)
+  - Fixed device key mismatch between coordinator and entities (now consistently uses `friendly_id`)
+  - Filter out `direction='to'` telegrams (commands) - only process `direction='from'` (status responses)
+  - Handle both list and dict formats for telegram functions data
+  - Thread safety: Fixed `async_dispatcher_send` being called from wrong thread via proper `@callback` decorator
+- **All devices now load correctly**: Auto-discovered devices from telegrams now get properly updated with EEP info during discovery, ensuring all entities are created
 
 ## [0.0.9] - 2024-11-24
 
