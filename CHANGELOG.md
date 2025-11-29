@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.10] - 2024-11-24
+
+### Fixed
+- **Device availability restored**: Fixed device lookup in telegram handler. Devices are keyed by friendly_id but telegrams only contain device_id, causing a lookup mismatch that made all devices unavailable.
+- **Thread safety fix**: Fixed `async_dispatcher_send` being called from wrong thread in `_finalize_telegram`. The `async_call_later` callback now uses proper `@callback` decorator.
+
 ## [0.0.9] - 2024-11-24
 
 ### Added
