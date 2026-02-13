@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - 2025-02-13
+
+### Fixed
+- **Faster state updates**: Reduced debounce timer for `stream/device` and `stream/telegram` handlers from 500ms to 100ms, making external state changes reflect near-instantly in Home Assistant
+
 ## [0.1.0] - 2025-02-13
 
 ### Added

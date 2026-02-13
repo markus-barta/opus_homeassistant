@@ -254,8 +254,10 @@ class OpusGreenNetCoordinator:
             def finalize_callback(_now, did=device_id):
                 self._finalize_device_stream(did)
 
+            # Short debounce: gateway publishes all properties within ms,
+            # so 0.1s is ample to collect a full delta while keeping UI snappy.
             self._pending_device_streams[device_id] = async_call_later(
-                self.hass, 0.5, finalize_callback
+                self.hass, 0.1, finalize_callback
             )
 
         except Exception as err:
@@ -575,8 +577,10 @@ class OpusGreenNetCoordinator:
             def finalize_callback(_now, did=device_id):
                 self._finalize_telegram(did)
 
+            # Short debounce: gateway publishes all properties within ms,
+            # so 0.1s is ample to collect a full telegram while keeping UI snappy.
             self._pending_telegrams[device_id] = async_call_later(
-                self.hass, 0.5, finalize_callback
+                self.hass, 0.1, finalize_callback
             )
 
         except Exception as err:
