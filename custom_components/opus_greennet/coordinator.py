@@ -272,7 +272,7 @@ class OpusGreenNetCoordinator:
         stream_data = self._device_stream_data.pop(device_id)
         self._pending_device_streams.pop(device_id, None)
 
-        # O(n) linear scan to find device by device_id
+        # Find the device
         device = None
         device_key = None
         for key, dev in self.devices.items():
@@ -660,7 +660,7 @@ class OpusGreenNetCoordinator:
             "telegramInfo": effective_data.get("telegramInfo") or telegram_data.get("telegramInfo", {}),
         }
 
-        # O(n) linear scan to find device by device_id
+        # Find device by device_id (devices are keyed by friendly_id)
         device = None
         device_key = None
         for key, dev in self.devices.items():
@@ -670,15 +670,13 @@ class OpusGreenNetCoordinator:
                 break
 
         if device is None:
-            # Device not yet discovered - create a basic entry for auto-discovery
-            # from telegram data (for devices that only send telegrams, not stream/device)
+            # Create a basic device entry if we haven't discovered it yet
             device_key = friendly_id
             device = EnOceanDevice(
                 device_id=device_id,
                 friendly_id=friendly_id,
             )
             self.devices[device_key] = device
-            self._device_id_to_key[device_id] = device_key
             _LOGGER.info(
                 "Auto-discovered device from telegram: %s",
                 device_id,
@@ -688,21 +686,18 @@ class OpusGreenNetCoordinator:
                 f"{SIGNAL_DEVICE_DISCOVERED}_{self.eag_id}",
                 device,
             )
-            # Update initial state from telegram
-            if functions:
-                device.update_from_telegram(telegram)
-                signal = f"{SIGNAL_DEVICE_STATE_UPDATE}_{self.eag_id}_{device_key}"
-                async_dispatcher_send(self.hass, signal, device)
-            return
 
-        # Device is already known - skip telegram state updates.
-        # stream/device is the authoritative source for state updates on known devices.
-        # Telegrams may arrive with duplicate or stale data, so we ignore them
-        # to avoid duplicate processing and signal dispatching.
-        _LOGGER.debug(
-            "Skipping telegram state update for known device %s (%s) - stream/device is authoritative",
-            friendly_id, device_id
-        )
+        # Update device state
+        if functions:
+            _LOGGER.debug(
+                "Telegram update for %s (%s): %d functions: %s",
+                friendly_id, device_id, len(functions), functions,
+            )
+        device.update_from_telegram(telegram)
+
+        # Notify listeners of state update
+        signal = f"{SIGNAL_DEVICE_STATE_UPDATE}_{self.eag_id}_{device_key}"
+        async_dispatcher_send(self.hass, signal, device)
 
     # ──────────────────────────────────────────────────────────────────────
     # Command sending
