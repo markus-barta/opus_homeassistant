@@ -2,20 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.9] - 2026-02-14
+## [0.1.10] - 2026-02-14
 
-### Reverted
-- **Reverted device_id reverse lookup optimization**: Removed the `_device_id_to_key` dictionary and restored O(n) linear scans in `_finalize_device_stream` and `_finalize_telegram`. The optimization introduced in v0.1.7 caused issues with device state updates, so we've reverted to the original implementation while keeping the duplicate stream elimination improvements from v0.1.8.
-
-## [0.1.8] - 2026-02-14
-
-### Fixed
-- **Eliminated duplicate stream processing**: Modified `_finalize_telegram` to skip state updates for known devices. The `stream/device` topic is now the authoritative source for state updates, while `stream/telegram` is only used for auto-discovering new devices. This prevents duplicate processing when both topics arrive for the same state change.
-
-## [0.1.7] - 2026-02-14
-
-### Fixed
-- **Added device_id reverse lookup index**: Added `_device_id_to_key: dict[str, str]` mapping to enable O(1) device lookups instead of O(n) linear scans. Replaced the linear search loops in `_finalize_device_stream` and `_finalize_telegram` with direct dictionary lookups for faster state update processing.
+### Reset
+- **Reset to v0.1.6 state**: This release reverts all changes from v0.1.7, v0.1.8, and v0.1.9 to address stability issues. The codebase is now identical to v0.1.6.
 
 ## [0.1.6] - 2026-02-14
 
